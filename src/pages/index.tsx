@@ -3,13 +3,18 @@ import Head from "next/head";
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { api } from "~/utils/api";
+import {useRouter} from "next/router";
 
 const Home: NextPage = () => {
+    const router = useRouter()
 
     async function handleGameStart(gamemode:string){
-        const response = await fetch("/api/questions/questionFetch")
-        const data = await response.json()
-        console.log(data)
+        router.push({
+            pathname:"/questionDisplay",
+            query:{
+                gamemode:gamemode
+            }
+        })
     }
 
   return (
