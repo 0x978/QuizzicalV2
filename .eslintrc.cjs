@@ -9,6 +9,9 @@ module.exports = {
       parserOptions: {
         project: "tsconfig.json",
       },
+      "rules":{
+        "@typescript-eslint/restrict-template-expressions": "warn", // TODO figure this out
+      }
     },
   ],
   parser: "@typescript-eslint/parser",

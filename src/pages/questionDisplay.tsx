@@ -3,6 +3,7 @@ import axios from 'axios';
 import AnswerButtons from "~/components/answerButtons";
 import Head from "next/head";
 import {useState} from "react";
+import {nanoid} from "nanoid";
 
 interface questionType {
     question: string,
@@ -34,9 +35,9 @@ const QuestionDisplay: NextPage< InferGetServerSidePropsType<typeof getServerSid
                     <h1>Score: {score} </h1>
                     {questions.map((question:questionType) => {
                         return(
-                            <div className="text-center max-w-5xl">
-                                <h1 className="text-xl pt-6 text-indigo-500 font-bold m-2 ">{question.question}</h1>
-                                <AnswerButtons correctAnswer={question.correctAnswer} incorrectAnswers={question.incorrectAnswers} onAnswerClicked={handleAnswerButtonClick}/>
+                            <div key={nanoid()} className="text-center max-w-5xl">
+                                <h1 key={nanoid()} className="text-xl pt-6 text-indigo-500 font-bold m-2 ">{question.question}</h1>
+                                <AnswerButtons correctAnswer={question.correctAnswer} incorrectAnswers={question.incorrectAnswers} onAnswerClicked={handleAnswerButtonClick} key={nanoid()}/>
                             </div>
                         )
                     } )}
@@ -48,10 +49,10 @@ const QuestionDisplay: NextPage< InferGetServerSidePropsType<typeof getServerSid
 }
 
 export const getServerSideProps = async (context:GetServerSidePropsContext) => {
-    let gamemode = context.query.gamemode
+    const gamemode = context.query.gamemode
 
     if(gamemode === "easy" || gamemode === "medium" || gamemode === "hard"){
-        const {data} = await axios.get<questionType[]>(`https://the-trivia-api.com/api/questions?limit=5&difficulty=${context.query.gamemode}`)
+        const {data} = await axios.get<questionType[]>(`https://the-trivia-api.com/api/questions?limit=5&difficulty=${context.query.gamemode ||"easy"}`)
         return({
             props:{
                 questions:data
