@@ -13,14 +13,6 @@ interface questionType {
 }
 
 const QuestionDisplay: NextPage< InferGetServerSidePropsType<typeof getServerSideProps>> = ({questions}) => {
-    const [score,setScore] = useState<number>(0)
-
-    console.log(questions)
-
-    const handleAnswerButtonClick = (isCorrect:boolean) => {
-        console.log(isCorrect)
-        if(isCorrect){setScore(prevState => prevState + 1)}
-    }
 
     return(
         <>
@@ -32,12 +24,11 @@ const QuestionDisplay: NextPage< InferGetServerSidePropsType<typeof getServerSid
 
             <main className="flex h-screen">
                 <div className="m-auto" >
-                    <h1>Score: {score} </h1>
                     {questions.map((question:questionType) => {
                         return(
                             <div key={nanoid()} className="text-center max-w-5xl">
                                 <h1 key={nanoid()} className="text-xl pt-6 text-indigo-500 font-bold m-2 ">{question.question}</h1>
-                                <AnswerButtons correctAnswer={question.correctAnswer} incorrectAnswers={question.incorrectAnswers} onAnswerClicked={handleAnswerButtonClick} key={nanoid()}/>
+                                <AnswerButtons correctAnswer={question.correctAnswer} incorrectAnswers={question.incorrectAnswers}key={nanoid()}/>
                             </div>
                         )
                     } )}

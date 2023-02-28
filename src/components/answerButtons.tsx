@@ -6,10 +6,9 @@ import {nanoid} from "nanoid";
 interface buttonProps{
     correctAnswer: string,
     incorrectAnswers: string[],
-    onAnswerClicked: (isCorrect: boolean) => void,
 }
 
-const AnswerButtons: FC<buttonProps> = ({correctAnswer,incorrectAnswers,onAnswerClicked}) => {
+const AnswerButtons: FC<buttonProps> = ({correctAnswer,incorrectAnswers}) => {
     const [answers,setAnswers] = useState<string[]>([])
     const [canClick,setCanClick] = useState<boolean>(true)
 
@@ -26,7 +25,7 @@ const AnswerButtons: FC<buttonProps> = ({correctAnswer,incorrectAnswers,onAnswer
 
         for (let i = shuffledArray.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
-            [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]]; // TODO fix type error
+            [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
         }
 
         return shuffledArray;
@@ -35,9 +34,8 @@ const AnswerButtons: FC<buttonProps> = ({correctAnswer,incorrectAnswers,onAnswer
 
     const handleButtonClick = (answer:string) => {
         const correct = answer === correctAnswer
-        console.log(correct)
         setCanClick(false)
-        onAnswerClicked(correct)
+        // onAnswerClicked(correct) TODO was causing state re-render in parent. Not really necessary, can probably find another way.
     };
 
     return(
