@@ -1,5 +1,4 @@
 import { createTRPCRouter } from "~/server/api/trpc";
-import {questionRouter} from "~/server/api/routers/questionRouter";
 
 /**
  * This is the primary router for your server.

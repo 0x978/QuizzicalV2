@@ -1,5 +1,6 @@
 import {FC} from "preact/compat";
 import {useEffect, useState} from "react";
+import {nanoid} from "nanoid";
 
 
 interface buttonProps{
@@ -10,10 +11,7 @@ interface buttonProps{
 
 const AnswerButtons: FC<buttonProps> = ({correctAnswer,incorrectAnswers,onAnswerClicked}) => {
     const [answers,setAnswers] = useState<string[]>([])
-
-    if (!correctAnswer || !incorrectAnswers) {
-        return null; // or return an error message
-    }
+    const [canClick,setCanClick] = useState<boolean>(true)
 
     useEffect(() =>{
         let tempAns:string[] = []
@@ -36,8 +34,10 @@ const AnswerButtons: FC<buttonProps> = ({correctAnswer,incorrectAnswers,onAnswer
 
 
     const handleButtonClick = (answer:string) => {
-
-        //onAnswerClicked(newIsCorrect);
+        const correct = answer === correctAnswer
+        console.log(correct)
+        setCanClick(false)
+        onAnswerClicked(correct)
     };
 
     return(
@@ -46,7 +46,10 @@ const AnswerButtons: FC<buttonProps> = ({correctAnswer,incorrectAnswers,onAnswer
             <div className="flex justify-center gap-5">
                 {answers.map((ans) =>{
                     return(
-                        <button className="text-black bg-amber-200 text-sm p-2 rounded-full transition hover:bg-green-700 w-44 text-base font-semibold">{ans}</button>
+                        <button key={nanoid()} className={`text-black text-sm p-2 rounded-lg transition hover:bg-orange-300 w-44 text-base font-semibold disabled:pointer-events-none active:translate-y-1
+                        ${canClick && "bg-slate-500"} ${(!canClick && ans === correctAnswer) && "bg-lime-400"} ${(!canClick && ans !== correctAnswer) && "bg-red-400"} `}
+                                disabled={!canClick}
+                                onClick={() => canClick && handleButtonClick(ans)}>{ans}</button>
                     )
                 })}
             </div>

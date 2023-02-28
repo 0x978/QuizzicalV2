@@ -1,5 +1,4 @@
-import {GetServerSideProps, GetServerSidePropsContext, InferGetServerSidePropsType, NextPage} from "next";
-import Home from "~/pages/index";
+import {GetServerSidePropsContext, InferGetServerSidePropsType, NextPage} from "next";
 import axios from 'axios';
 import AnswerButtons from "~/components/answerButtons";
 import Head from "next/head";
@@ -15,7 +14,10 @@ interface questionType {
 const QuestionDisplay: NextPage< InferGetServerSidePropsType<typeof getServerSideProps>> = ({questions}) => {
     const [score,setScore] = useState<number>(0)
 
+    console.log(questions)
+
     const handleAnswerButtonClick = (isCorrect:boolean) => {
+        console.log(isCorrect)
         if(isCorrect){setScore(prevState => prevState + 1)}
     }
 
@@ -29,9 +31,10 @@ const QuestionDisplay: NextPage< InferGetServerSidePropsType<typeof getServerSid
 
             <main className="flex h-screen">
                 <div className="m-auto" >
+                    <h1>Score: {score} </h1>
                     {questions.map((question:questionType) => {
                         return(
-                            <div className="text-center">
+                            <div className="text-center max-w-5xl">
                                 <h1 className="text-xl pt-6 text-indigo-500 font-bold m-2 ">{question.question}</h1>
                                 <AnswerButtons correctAnswer={question.correctAnswer} incorrectAnswers={question.incorrectAnswers} onAnswerClicked={handleAnswerButtonClick}/>
                             </div>
@@ -44,17 +47,31 @@ const QuestionDisplay: NextPage< InferGetServerSidePropsType<typeof getServerSid
     )
 }
 
-export const getServerSideProps: GetServerSideProps = async (context:GetServerSidePropsContext) => {
+export const getServerSideProps = async (context:GetServerSidePropsContext) => {
+    let gamemode = context.query.gamemode
 
-    let questions = null
+    if(gamemode === "easy" || gamemode === "medium" || gamemode === "hard"){
+        const {data} = await axios.get<questionType[]>(`https://the-trivia-api.com/api/questions?limit=5&difficulty=${context.query.gamemode}`)
+        return({
+            props:{
+                questions:data
+            }
+        })
+    }
+    else if(gamemode === "1980's"){
+        const {data} = await axios.get<questionType[]>(`https://the-trivia-api.com/api/questions?limit=5&tags=${context.query.gamemode}`)
+        return({
+            props:{
+                questions:data
+            }
+        })
+    }
 
-    await axios.get("https://the-trivia-api.com/api/questions?limit=5&difficulty=easy").then(res => questions = res.data)
+    const {data} = await axios.get<questionType[]>(`https://the-trivia-api.com/api/questions?categories=${context.query.gamemode}&limit=5`)
 
-
-    console.log(questions)
     return({
         props:{
-            questions:questions
+            questions:data
         }
     })
 
