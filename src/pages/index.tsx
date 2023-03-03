@@ -39,7 +39,7 @@ const Home: NextPage = () => {
                       </div>
                       <h3 className="text-xl pt-6 font-bold">Or, play from one of the following preselected categories!</h3>
                       <div className="m-auto space-x-4 mt-2 ">
-                          <button className="text-white bg-pink-600 text-sm p-2 rounded-full transition hover:bg-pink-800 w-44 text-base font-semibold " type="button" onClick={(() => void handleGameStart("1980&apos;s"))}>80&apos;s Trivia</button> {/*https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/no-unescaped-entities.md */}
+                          <button className="text-white bg-pink-600 text-sm p-2 rounded-full transition hover:bg-pink-800 w-44 text-base font-semibold " type="button" onClick={(() => void handleGameStart("1980s"))}>80&apos;s Trivia</button> {/*https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/no-unescaped-entities.md */}
                           <button className="text-white bg-cyan-700 text-sm p-2 rounded-full transition hover:bg-cyan-800 w-44 text-base font-semibold " type="button" onClick={(() => void handleGameStart("sport_and_leisure"))}>Sport</button>
                           <button className="text-white bg-purple-600 text-sm p-2 rounded-full transition hover:bg-purple-700 w-44 text-base font-semibold" type="button" onClick={(() => void handleGameStart("music"))}>Music</button>
                           <button className="text-white bg-gray-600 text-sm p-2 rounded-full transition hover:bg-gray-700 w-44 text-base font-semibold" type="button" onClick={(() => void handleGameStart("film_and_tv"))}>Film & TV</button>

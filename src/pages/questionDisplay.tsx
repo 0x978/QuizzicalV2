@@ -5,6 +5,14 @@ import Head from "next/head";
 import {useState} from "react";
 import {nanoid} from "nanoid";
 
+
+interface questionData{
+    question: string,
+    shuffled: string[],
+    correct:string,
+    id: string,
+}
+
 interface questionType {
     question: string,
     correctAnswer: string,
@@ -12,7 +20,20 @@ interface questionType {
     difficulty: string,
 }
 
-const QuestionDisplay: NextPage< InferGetServerSidePropsType<typeof getServerSideProps>> = ({questions}) => {
+const QuestionDisplay: NextPage< InferGetServerSidePropsType<typeof getServerSideProps>> = ({questionData}) => {
+    const [score,setScore] = useState<number>(0)
+    const [answeredQuestions,setAnsweredQuestions] = useState<string[]>([])
+
+
+
+    const handleAnswerButtonClick = (id:string,isCorrect:boolean) => {
+        if(isCorrect){
+            setScore(prev => prev+1);
+        }
+        setAnsweredQuestions([...answeredQuestions,id])
+        console.log(id,score)
+    }
+
 
     return(
         <>
@@ -24,14 +45,23 @@ const QuestionDisplay: NextPage< InferGetServerSidePropsType<typeof getServerSid
 
             <main className="flex h-screen">
                 <div className="m-auto" >
-                    {questions.map((question:questionType) => {
+                    {questionData.map((question:questionData) => {
                         return(
                             <div key={nanoid()} className="text-center max-w-5xl">
                                 <h1 key={nanoid()} className="text-xl pt-6 text-indigo-500 font-bold m-2 ">{question.question}</h1>
-                                <AnswerButtons correctAnswer={question.correctAnswer} incorrectAnswers={question.incorrectAnswers}key={nanoid()}/>
+                                <AnswerButtons
+                                    correctAnswer={question.correct}
+                                    allAnswers={question.shuffled}
+                                    handleAnswerButtonClick={handleAnswerButtonClick}
+                                    id={question.id}
+                                    isAnswered={answeredQuestions.includes(question.id)}
+                                    key={nanoid()}/>
                             </div>
                         )
                     } )}
+                    {/*<div className="flex justify-center pt-5">*/}
+                    {/*    <button className="text-black bg-green-700 text-sm p-2 rounded-lg transition hover:bg-green-400 w-44 text-base font-semibold ">Submit</button>*/}
+                    {/*</div>*/}
                 </div>
 
             </main>
@@ -43,30 +73,67 @@ export const getServerSideProps = async (context:GetServerSidePropsContext) => {
     const gamemode = context.query.gamemode
 
     if(gamemode === "easy" || gamemode === "medium" || gamemode === "hard"){
-        const {data} = await axios.get<questionType[]>(`https://the-trivia-api.com/api/questions?limit=5&difficulty=${context.query.gamemode ||"easy"}`)
+        const {data} = await axios.get<questionType[]>("https://the-trivia-api.com/api/questions?limit=5&tags=1980's")
+        const questionData:questionData[] = data.map((q) => {
+            return {
+                question: q.question,
+                shuffled:shuffleAnswers(q.correctAnswer,q.incorrectAnswers),
+                correct:q.correctAnswer,
+                id: nanoid()
+            }
+        })
+        console.log(questionData)
         return({
             props:{
-                questions:data
+                questionData:questionData
             }
         })
     }
-    else if(gamemode === "1980's"){
-        const {data} = await axios.get<questionType[]>(`https://the-trivia-api.com/api/questions?limit=5&tags=${context.query.gamemode}`)
+
+    else if(gamemode === "1980s"){
+        const {data} = await axios.get<questionType[]>("https://the-trivia-api.com/api/questions?limit=5&tags=1980's")
+        const questionData:questionData[] = data.map((q) => {
+            return {
+                question: q.question,
+                shuffled:shuffleAnswers(q.correctAnswer,q.incorrectAnswers),
+                correct:q.correctAnswer,
+                id: nanoid()
+            }
+        })
         return({
             props:{
-                questions:data
+                questionData:questionData
             }
         })
     }
 
     const {data} = await axios.get<questionType[]>(`https://the-trivia-api.com/api/questions?categories=${context.query.gamemode}&limit=5`)
 
+
+    const questionData:questionData[] = data.map((q) => {
+        return {
+            question: q.question,
+            shuffled:shuffleAnswers(q.correctAnswer,q.incorrectAnswers),
+            correct:q.correctAnswer,
+            id: nanoid()
+        }
+    })
     return({
         props:{
-            questions:data
+            questionData:questionData
         }
     })
 
+    function shuffleAnswers(correctAnswer:string,incorrectAnswers:string[]): string[] {
+        const shuffledArray:string[] = [...incorrectAnswers,correctAnswer];
+
+        for (let i = shuffledArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+        }
+
+        return shuffledArray;
+    }
 }
 
 export default QuestionDisplay;
