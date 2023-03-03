@@ -2,8 +2,9 @@ import {GetServerSidePropsContext, InferGetServerSidePropsType, NextPage} from "
 import axios from 'axios';
 import AnswerButtons from "~/components/answerButtons";
 import Head from "next/head";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {nanoid} from "nanoid";
+import {useRouter} from "next/router";
 
 
 interface questionData{
@@ -21,9 +22,9 @@ interface questionType {
 }
 
 const QuestionDisplay: NextPage< InferGetServerSidePropsType<typeof getServerSideProps>> = ({questionData}) => {
+    const router = useRouter();
     const [score,setScore] = useState<number>(0)
     const [answeredQuestions,setAnsweredQuestions] = useState<string[]>([])
-
 
 
     const handleAnswerButtonClick = (id:string,isCorrect:boolean) => {
@@ -33,6 +34,17 @@ const QuestionDisplay: NextPage< InferGetServerSidePropsType<typeof getServerSid
         setAnsweredQuestions([...answeredQuestions,id])
         console.log(id,score)
     }
+
+    useEffect(() => {
+        if(answeredQuestions.length === 5){
+            void router.push({
+                pathname: "/endGame",
+                query:{
+                    score:score
+                }
+            },"/endGame")
+        }
+    },[answeredQuestions])
 
 
     return(
@@ -59,9 +71,6 @@ const QuestionDisplay: NextPage< InferGetServerSidePropsType<typeof getServerSid
                             </div>
                         )
                     } )}
-                    {/*<div className="flex justify-center pt-5">*/}
-                    {/*    <button className="text-black bg-green-700 text-sm p-2 rounded-lg transition hover:bg-green-400 w-44 text-base font-semibold ">Submit</button>*/}
-                    {/*</div>*/}
                 </div>
 
             </main>
