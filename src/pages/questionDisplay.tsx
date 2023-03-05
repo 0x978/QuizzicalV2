@@ -37,12 +37,14 @@ const QuestionDisplay: NextPage< InferGetServerSidePropsType<typeof getServerSid
 
     useEffect(() => {
         if(answeredQuestions.length === 5){
-            void router.push({
-                pathname: "/endGame",
-                query:{
-                    score:score
-                }
-            },"/endGame")
+            setTimeout(() =>{
+                void router.push({
+                    pathname: "/endGame",
+                    query:{
+                        score:score
+                    }
+                },"/endGame")
+            },500)
         }
     },[answeredQuestions])
 
