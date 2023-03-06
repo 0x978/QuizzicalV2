@@ -5,6 +5,9 @@ import Head from "next/head";
 import {useEffect, useState} from "react";
 import {nanoid} from "nanoid";
 import {useRouter} from "next/router";
+import {api} from "~/utils/api";
+import answerButtons from "~/components/answerButtons";
+import {useSession} from "next-auth/react";
 
 
 interface questionData{
@@ -24,19 +27,32 @@ interface questionType {
 const QuestionDisplay: NextPage< InferGetServerSidePropsType<typeof getServerSideProps>> = ({questionData}) => {
     const router = useRouter();
     const [score,setScore] = useState<number>(0)
-    const [answeredQuestions,setAnsweredQuestions] = useState<string[]>([])
+    const [answeredQuestions,setAnsweredQuestions] = useState<string[][]>([])
+    const {data: session} = useSession()
+
+    const {mutate:uploadQuiz} = api.quiz.createQuiz.useMutation()
 
 
-    const handleAnswerButtonClick = (id:string,isCorrect:boolean) => {
+    const handleAnswerButtonClick = (id:string,isCorrect:boolean,answer:string) => {
         if(isCorrect){
             setScore(prev => prev+1);
         }
-        setAnsweredQuestions([...answeredQuestions,id])
-        console.log(id,score)
+        setAnsweredQuestions([...answeredQuestions,[id,answer]])
     }
 
     useEffect(() => {
         if(answeredQuestions.length === 5){
+            const quizData = {
+                quizQuestions:questionData,
+                answers: answeredQuestions.map(a => a[1]),
+            }
+
+            if(session){
+                const id:string = session.user.id;
+                uploadQuiz({userId:id,score:score,quizData:quizData})
+            }
+
+
             setTimeout(() =>{
                 void router.push({
                     pathname: "/endGame",
@@ -68,7 +84,7 @@ const QuestionDisplay: NextPage< InferGetServerSidePropsType<typeof getServerSid
                                     allAnswers={question.shuffled}
                                     handleAnswerButtonClick={handleAnswerButtonClick}
                                     id={question.id}
-                                    isAnswered={answeredQuestions.includes(question.id)}
+                                    isAnswered={!!answeredQuestions.find(q => question.id === q[0])}
                                     key={nanoid()}/>
                             </div>
                         )

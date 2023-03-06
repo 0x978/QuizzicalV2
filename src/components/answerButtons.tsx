@@ -6,7 +6,7 @@ interface buttonProps{
     correctAnswer: string,
     allAnswers: string[],
     id: string,
-    handleAnswerButtonClick(id:string,isCorrect:boolean): void;
+    handleAnswerButtonClick(id:string,isCorrect:boolean,answer:string): void;
     isAnswered:boolean
 }
 
@@ -15,7 +15,7 @@ const AnswerButtons: FC<buttonProps> =  ({correctAnswer,allAnswers,id,handleAnsw
 
     const handleButtonClick = (answer:string) => {
         const isCorrect = answer === correctAnswer
-        handleAnswerButtonClick(id,isCorrect)
+        handleAnswerButtonClick(id,isCorrect,answer)
     };
 
     return(

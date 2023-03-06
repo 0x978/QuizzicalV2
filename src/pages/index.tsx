@@ -5,12 +5,11 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { api } from "~/utils/api";
 import {useRouter} from "next/router";
 import Swal from "sweetalert2";
+import { MdAccountCircle } from "react-icons/md";
 
 const Home: NextPage = () => {
     const {data: session} = useSession()
     const router = useRouter()
-
-    console.log(session)
 
     async function handleGameStart(gamemode:string){
         await router.push({
@@ -74,9 +73,21 @@ const Home: NextPage = () => {
 
                       <h3 className="pt-6 text-lg font-bold">Average Score:</h3>
 
-                      <div className="m-auto space-x-4 mt-2 ">
-                          <button className="text-white bg-gray-700 text-sm p-2 rounded-full transition hover:bg-gray-800 w-52 h-11 text-base font-semibold" type="button" onClick={() => handleSettings()}>{session ? "Settings" : "Login"}</button>
+                      <div className="m-auto mt-2 flex flex-col md:flex-row md:items-center md:justify-center space-y-2 md:space-y-0 md:space-x-4">
+                          <button className="text-white bg-gray-700 text-sm p-2 rounded-full transition hover:bg-gray-800 w-40 h-11 text-base font-semibold" type="button" onClick={() => handleSettings()}>
+                              {session ? "Settings" : "Login"}
+                          </button>
+                          {session && (
+                              <button className="text-white bg-zinc-600 text-sm p-2 rounded-full transition hover:bg-zinc-800 w-40 h-11 text-base font-semibold flex items-center justify-center" type="button" onClick={() => void router.push("/profile")}>
+                                  <div className="flex items-center">
+                                      <MdAccountCircle className="relative top-0.4" size={22}/>
+                                      <span className="ml-2">{session.user.name}</span>
+                                  </div>
+                              </button>
+                          )}
                       </div>
+
+
 
                   </div>
               </div>
