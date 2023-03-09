@@ -1,7 +1,5 @@
 import {createTRPCRouter, publicProcedure} from "~/server/api/trpc";
 import {z} from "zod"
-import {Simulate} from "react-dom/test-utils";
-import select = Simulate.select;
 
 const quizQuestionSchema = z.object({
     question: z.string(),
