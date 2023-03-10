@@ -8,35 +8,29 @@ import {set} from "immutable";
 
 
 
-interface quizQuestions{
-    id: string;
-    correct: string;
-    question: string;
-    shuffled: string[];
-}
-
 interface quizDataType{
     answers:string[]
-    quizQuestions: quizQuestions[],
+    questions: string[]
+    correctAns: string[]
 }
 
 interface userQuizzes{
     id: number,
     userId: string,
-    quizData: quizDataType[],
+    quizData: quizDataType,
     score: number,
 }
 
-type QuizDataWithScore = {
-    quizData: quizDataType[],
-    score: number
-}
+
 
 
 const Profile: FC = ({}) => {
     const {data: session} = useSession()
+    const [scoreArray,setScoreArray] = useState<number[]>([])
+    const [questions,setQuestions] = useState<String[][]>([])
+    const [answers,setAnswers] = useState<String[][]>([])
+    const [correctAnswers,setCorrectAnswers] = useState<String[][]>([])
 
-    const [quizRes,setQuizRes] = useState<QuizDataWithScore[]>([])
 
 
     const { data: quizData } = api.quiz.getQuizzesByID.useQuery(
@@ -45,27 +39,23 @@ const Profile: FC = ({}) => {
         },
         {
             onSuccess(response: userQuizzes[]) {
-                let quizDataWithScores: QuizDataWithScore[] = response.map(res => {
-                    return {
-                        quizData: res.quizData,
-                        score: res.score
-                    };
-                });
-                setQuizRes(quizDataWithScores)
+                response.forEach(quiz => {
+                    setScoreArray(prevState => [...prevState, quiz.score])
+                    setQuestions(prevState => [...prevState,quiz.quizData.questions])
+                    setAnswers(prevState => [...prevState,quiz.quizData.answers])
+                    setCorrectAnswers(prevState => [...prevState,quiz.quizData.correctAns])
+                })
+
             }
         }
     );
 
 
-    console.log(quizRes)
-
 
     return (
         <main>
-            {quizRes ? (
-                quizRes.map((quiz) => {
-                    return <h1>{quiz.score}</h1>;
-                })
+            {scoreArray.length > 0 ? (
+                <h1>fetched</h1>
             ) : (
                 <h1>Loading...</h1>
             )}

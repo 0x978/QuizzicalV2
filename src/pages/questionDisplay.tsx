@@ -43,13 +43,15 @@ const QuestionDisplay: NextPage< InferGetServerSidePropsType<typeof getServerSid
     useEffect(() => {
         if(answeredQuestions.length === 5){
             const quizData = {
-                quizQuestions:questionData,
+                questions: questionData.map(q => q.question),
+                correctAns: questionData.map(q => q.correct),
                 answers: answeredQuestions.map(a => a[1]),
             }
+            console.log(quizData)
 
             if(session){
                 const id:string = session.user.id;
-                uploadQuiz({userId:id,score:score,quizData:quizData})
+                uploadQuiz({userId:id,score:score,quizData:quizData,date:new Date().toISOString()})
             }
 
 

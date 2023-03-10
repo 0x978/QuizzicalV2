@@ -2,10 +2,9 @@ import {createTRPCRouter, publicProcedure} from "~/server/api/trpc";
 import {z} from "zod"
 
 const quizQuestionSchema = z.object({
-    question: z.string(),
-    shuffled: z.array(z.string()),
-    correct: z.string(),
-    id: z.string(),
+    questions:  z.array(z.string()),
+    correctAns: z.array(z.string()),
+    answers: z.array(z.string()),
 });
 
 export const quizRouter = createTRPCRouter({
@@ -13,18 +12,17 @@ export const quizRouter = createTRPCRouter({
     createQuiz: publicProcedure
         .input(z.object({
             userId:z.string(),
-            quizData: z.object({
-                quizQuestions: z.array(quizQuestionSchema),
-                answers: z.array(z.string()),
-            }),
-            score: z.number()
+            quizData: quizQuestionSchema,
+            score: z.number(),
+            date : z.string(),
         }))
-        .mutation(async ({input: {userId,quizData,score},ctx: {prisma}}) =>{
+        .mutation(async ({input: {userId,quizData,score,date},ctx: {prisma}}) =>{
             const item = await prisma.quiz.create({
                 data:{
                     userId,
                     quizData,
                     score,
+                    date,
                 },
             })
             return item
@@ -32,16 +30,25 @@ export const quizRouter = createTRPCRouter({
 
     getQuizzesByID: publicProcedure
         .input(z.object({
-            userId:z.string(),
+            userId: z.string(),
         }))
-        .query(async ({input:{userId},ctx:{prisma}}) => {
-            const data = prisma.user.findUnique({
-                where: {
-                    id: userId
-                },
-                select: {quizzes: true}
-            }).quizzes()
-            return data
-        })
+        .query(async ({ input: { userId }, ctx: { prisma } }) => {
+            try {
+                return await prisma.quiz.findMany({
+                    where: {
+                        userId: userId,
+                    },
+                    orderBy: {
+                        date: 'desc',
+                    },
+                    take: 5,
+                });
+            } catch (error) {
+                console.error(error);
+                throw new Error('Failed to fetch quizzes');
+            }
+        }),
+
+
 
 })

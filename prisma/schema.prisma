@@ -56,11 +56,12 @@ model User {
 }
 
 model quiz {
-  id       Int    @id @default(autoincrement())
-  user     User   @relation(fields: [userId], references: [id])
+  id       Int      @id @default(autoincrement())
+  user     User     @relation(fields: [userId], references: [id])
   userId   String
   quizData Json
   score    Int
+  date     DateTime
 }
 
 model VerificationToken {
