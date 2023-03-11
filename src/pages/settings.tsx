@@ -1,4 +1,4 @@
-import {FC, useEffect} from "react"
+import {type FC, useEffect} from "react"
 import {signOut, useSession} from "next-auth/react";
 import Head from "next/head";
 import {useRouter} from "next/router";

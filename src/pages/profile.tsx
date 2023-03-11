@@ -1,12 +1,8 @@
-import {FC, useEffect, useState} from "react"
+import {type FC, useState} from "react"
 import {GetServerSidePropsContext} from "next";
 import {getServerAuthSession} from "~/server/auth";
 import {api} from "~/utils/api";
-import {signOut, useSession} from "next-auth/react";
-import {useRouter} from "next/router";
-import {set} from "immutable";
-
-
+import {useSession} from "next-auth/react";
 
 interface quizDataType{
     answers:string[]
@@ -21,15 +17,12 @@ interface userQuizzes{
     score: number,
 }
 
-
-
-
 const Profile: FC = ({}) => {
     const {data: session} = useSession()
     const [scoreArray,setScoreArray] = useState<number[]>([])
-    const [questions,setQuestions] = useState<String[][]>([])
-    const [answers,setAnswers] = useState<String[][]>([])
-    const [correctAnswers,setCorrectAnswers] = useState<String[][]>([])
+    const [questions,setQuestions] = useState<string[][]>([])
+    const [answers,setAnswers] = useState<string[][]>([])
+    const [correctAnswers,setCorrectAnswers] = useState<string[][]>([])
 
 
 
