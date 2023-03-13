@@ -1,4 +1,5 @@
 import {FC, useEffect, useState} from "react"
+import {useRouter} from "next/router";
 
 interface profileQuizDataProps{
     date: number,
@@ -10,8 +11,9 @@ const ProfileQuizSelect: FC<profileQuizDataProps> = ({date,index,score}) => {
     const [localeDate,setLocaleDate] = useState<string>("")
 
 
+
     useEffect(() => { // date formatting stuff
-        const customFormattedDate = new Intl.DateTimeFormat('en-US', {
+        const customFormattedDate = new Intl.DateTimeFormat(undefined, {
             day: 'numeric',
             month: 'long',
             year: 'numeric',
@@ -22,7 +24,6 @@ const ProfileQuizSelect: FC<profileQuizDataProps> = ({date,index,score}) => {
         }).format(new Date(date));
         setLocaleDate(customFormattedDate)
     },[])
-
 
     return (
         <>

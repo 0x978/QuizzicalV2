@@ -6,7 +6,6 @@ import {useEffect, useState} from "react";
 import {nanoid} from "nanoid";
 import {useRouter} from "next/router";
 import {api} from "~/utils/api";
-import answerButtons from "~/components/answerButtons";
 import {useSession} from "next-auth/react";
 
 
@@ -45,7 +44,8 @@ const QuestionDisplay: NextPage< InferGetServerSidePropsType<typeof getServerSid
             const quizData = {
                 questions: questionData.map(q => q.question),
                 correctAns: questionData.map(q => q.correct),
-                answers: answeredQuestions.map(a => a[1]),
+                selectedAnswers: answeredQuestions.map(a => a[1]),
+                allAnswers: questionData.map(q => q.shuffled)
             }
             console.log(quizData)
 
@@ -63,7 +63,9 @@ const QuestionDisplay: NextPage< InferGetServerSidePropsType<typeof getServerSid
                     }
                 },"/endGame")
             },500)
+
         }
+
     },[answeredQuestions])
 
 
