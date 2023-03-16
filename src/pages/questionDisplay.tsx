@@ -1,4 +1,4 @@
-import {GetServerSidePropsContext, InferGetServerSidePropsType, NextPage} from "next";
+import type {GetServerSidePropsContext, InferGetServerSidePropsType, NextPage} from "next";
 import axios from 'axios';
 import AnswerButtons from "~/components/answerButtons";
 import Head from "next/head";

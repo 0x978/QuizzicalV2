@@ -1,5 +1,4 @@
-import {FC, useEffect, useState} from "react"
-import {useRouter} from "next/router";
+import {type FC, useEffect, useState} from "react"
 
 interface profileQuizDataProps{
     date: number,

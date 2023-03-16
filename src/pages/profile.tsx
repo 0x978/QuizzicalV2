@@ -1,12 +1,12 @@
 import {type FC, useState} from "react"
-import {GetServerSidePropsContext} from "next";
+import type {GetServerSidePropsContext} from "next";
 import {getServerAuthSession} from "~/server/auth";
 import {api} from "~/utils/api";
 import {useSession} from "next-auth/react";
 import ProfileQuizSelect from "~/components/profileQuizSelect";
 import {nanoid} from "nanoid";
 import {useRouter} from "next/router";
-import {quizType} from "../../types/types";
+import type {quizType} from "../../types/types";
 
 
 const Profile: FC = ({}) => {
@@ -30,7 +30,7 @@ const Profile: FC = ({}) => {
         },
         {
             onSuccess(response: quizType[]) {
-                let score:number[] = []
+                const score:number[] = []
                 response.forEach(quiz => {
                     score.push(quiz.score)
                 })
