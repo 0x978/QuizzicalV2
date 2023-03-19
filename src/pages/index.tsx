@@ -70,7 +70,7 @@ const Home: NextPage = () => {
                       </div>
 
 
-                      <div className="m-auto mt-2 flex flex-col mt-14  md:flex-row md:items-center md:justify-center space-y-2 md:space-y-0 md:space-x-8">
+                      <div className="m-auto flex flex-col mt-8 md:flex-row md:items-center md:justify-center space-y-2 md:space-y-0 md:space-x-8">
                           {session === undefined ? <h1>Loading user data...</h1>:
                               <button className="text-white bg-gray-700 text-sm p-2 rounded-full transition hover:bg-gray-800 w-40 h-11 text-base font-semibold" type="button" onClick={() => handleLoginOrProfile()}>
                                   {session ? "Settings" : "Login"}
