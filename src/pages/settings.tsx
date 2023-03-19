@@ -3,12 +3,16 @@ import {signOut, useSession} from "next-auth/react";
 import Head from "next/head";
 import {useRouter} from "next/router";
 import Swal from "sweetalert2"
+import {api} from "~/utils/api";
 
 const Settings: FC = ({}) => {
     const {data: session} = useSession()
     const router = useRouter()
 
-    useEffect(() => {
+    const {mutate: deleteAccount} = api.quiz.deleteAccount.useMutation()
+
+
+            useEffect(() => {
         if(!session){
             void router.push("/")
         }
@@ -37,6 +41,34 @@ const Settings: FC = ({}) => {
         }).catch((err) => console.log(err))
     }
 
+    function handleDelete(){
+        Swal.fire({
+            title: 'Are you sure you want to delete your account?',
+            text: "All data associated with your Quizzical account will be deleted.",
+            showDenyButton: true,
+            confirmButtonText: 'Delete Account',
+            confirmButtonColor: "red",
+            denyButtonText: `Cancel`,
+            denyButtonColor: "green",
+            focusDeny:true,
+            width:600
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    icon:"success",
+                    title:"Account deleted.",
+                    text:"All data associated with your account has been deleted.",
+                    timer: 2000,
+                    showConfirmButton:false,
+                }).then(()=>{
+                    deleteAccount({userId:session!.user.id})
+                    void signOut()
+                }).catch((err) => console.log(err))
+            }
+        }).catch((err) => console.log(err))
+    }
+
+
     return(
         <>
             <Head>
@@ -49,11 +81,16 @@ const Settings: FC = ({}) => {
                 <div className="flex h-screen">
                     <div className="m-auto text-indigo-500 text-center align-middle">
                         <h1 className="text-4xl font-extrabold">Settings</h1>
-                        <div className="pt-5 flex flex-col space-y-4">
+                        <div className="pt-5 flex flex-col space-y-6">
                             <button
-                                className="text-white bg-red-600 p-2 rounded-full transition hover:bg-red-700 w-44 text-base font-semibold"
+                                className="text-white bg-orange-600 p-2 rounded-full transition hover:bg-orange-600 w-44 text-base font-semibold"
                                 onClick={() => handleSignOut()}>
                                 Sign out
+                            </button>
+                            <button
+                                className="text-white bg-red-700 p-2 rounded-full transition hover:bg-red-800 w-44 text-base font-semibold"
+                                onClick={() => handleDelete()}>
+                                Delete Account
                             </button>
                             <button
                                 className="text-white bg-green-500 p-2 rounded-full transition hover:bg-green-700-700 w-44 text-base font-semibold"

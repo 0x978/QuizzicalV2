@@ -91,5 +91,16 @@ export const quizRouter = createTRPCRouter({
             }
         }),
 
+    deleteAccount: publicProcedure
+        .input(z.object({
+            userId:z.string(),
+        }))
+        .mutation(async ({input: {userId},ctx: {prisma}}) =>{
+            return await prisma.user.delete({
+                where: {
+                    id:userId
+                },
+            })
+        }),
 
 })
