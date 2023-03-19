@@ -74,7 +74,12 @@ const Profile: FC = ({}) => {
                     </div>
 
                 )}
+                <div className="flex justify-center pt-5">
+                    <button className="text-white bg-red-500 text-sm p-2 rounded-full transition hover:bg-red-700 w-64 h-11 text-xl font-semibold "
+                            onClick={() => void router.push("/")}>Return</button>
+                </div>
             </div>
+
         </main>
     );
 }

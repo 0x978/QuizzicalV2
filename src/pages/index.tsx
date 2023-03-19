@@ -69,9 +69,8 @@ const Home: NextPage = () => {
                           <button className="text-white bg-fuchsia-700 p-2 rounded-full transition hover:bg-fuchsia-800 w-44 text-base font-semibold" type="button" onClick={(() => void handleGameStart("history"))}>History</button>
                       </div>
 
-                      <h3 className="pt-6 text-lg font-bold">Average Score:</h3>
 
-                      <div className="m-auto mt-2 flex flex-col md:flex-row md:items-center md:justify-center space-y-2 md:space-y-0 md:space-x-4">
+                      <div className="m-auto mt-2 flex flex-col mt-14  md:flex-row md:items-center md:justify-center space-y-2 md:space-y-0 md:space-x-8">
                           {session === undefined ? <h1>Loading user data...</h1>:
                               <button className="text-white bg-gray-700 text-sm p-2 rounded-full transition hover:bg-gray-800 w-40 h-11 text-base font-semibold" type="button" onClick={() => handleLoginOrProfile()}>
                                   {session ? "Settings" : "Login"}

@@ -37,13 +37,12 @@ const ProfileQuizView = () => {
                             <div>
                                 <div className="text-center text-indigo-500 font-extrabold ">
                                     <h1 className="text-5xl my-5 ">Game Results </h1>
-                                    <h1 className="my-3" >Game Number: {gameID} </h1>
-                                    <h1 className="my-3">score: {fetchedQuiz?.score} out of 5</h1>
+                                    <h1 className="my-3 text-2xl ">score: {fetchedQuiz?.score} out of 5</h1>
                                 </div>
 
                                 {quizData.questions.map((ques, i) => {
                                     return (
-                                        <div key={i} className={`p-4 mb-4 rounded-md shadow-md ${quizData.selectedAnswers[i] === quizData.correctAns[i] ? "bg-green-600" : "bg-red-600"}`}>
+                                        <div key={i} className={`p-4 mb-4 rounded-md ${quizData.selectedAnswers[i] === quizData.correctAns[i] ? "bg-green-600" : "bg-red-600"}`}>
                                             <h2 className="text-lg font-bold mb-2">{ques}</h2>
                                             <div className="grid grid-cols-2 gap-3">
                                                 {quizData.allAnswers[i].map((ans, j) => {
