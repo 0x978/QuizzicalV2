@@ -1,28 +1,24 @@
-# Create T3 App
+# QuizzicalV2 - A quiz game made with the T3 stack.
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+The game is playable at this URL: https://quiz.0x978.com/
 
-## What's next? How do I make an app with this?
+This was my first time using most of the technology involved, so it is possible that some things were not followed to the best practices.
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## Project Aims
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+The aim of Quizzicalv2 was to improve upon one of my first React projects, Quizzical by adding complete tracking of the quizzes a user completes with authentication as well as to generally improve the styling and functionality of the quiz.
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+## Technologies used
 
-## Learn More
+The stack I used for this project was the T3 stack, this included:
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+- Next.js
+- NextAuth.js
+- Prisma
+- Tailwind CSS
+- tRPC
+- Planetscale for database hosting
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+## Todo
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+- I consider it feature complete, however I will likely add more authentication options, as well as adjust the database to be better aligned with best practices.
