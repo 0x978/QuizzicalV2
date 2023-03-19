@@ -2,6 +2,10 @@ import {useRouter} from "next/router";
 import {api} from "~/utils/api";
 import {quizDataType} from "../../types/types";
 import Head from "next/head";
+import {GetServerSidePropsContext} from "next";
+import {getServerAuthSession} from "~/server/auth";
+import {router} from "next/client";
+import {prisma} from "~/server/db";
 
 
 const ProfileQuizView = () => {
@@ -16,7 +20,6 @@ const ProfileQuizView = () => {
 
 
     const quizData = fetchedQuiz?.quizData as unknown as quizDataType; // TODO THIS IS NOT GOOD, move away from JSON on schema.
-    console.log(quizData)
 
     return (
         <>
@@ -38,21 +41,25 @@ const ProfileQuizView = () => {
                                     <h1 className="my-3">score: {fetchedQuiz?.score} out of 5</h1>
                                 </div>
 
-                                {quizData.questions.map((ques,i) => {
+                                {quizData.questions.map((ques, i) => {
                                     return (
-                                        <div key={i} className={`p-3 ${quizData.selectedAnswers[i] === quizData.correctAns[i] ? "bg-green-800" : "bg-red-900"}`}>
-                                            <h1 >{ques}</h1>
-                                            <div className="flex space-x-3"> {/* div for answers*/}
-                                                {quizData.allAnswers[i] // fetches all answers for current question
-                                                    .map((ans,j) => {
-                                                        return(
-                                                            <h1 key={j} className={`${(ans === quizData.correctAns[i]) && "text-green-400"}`}>{ans}</h1>
-                                                        )
-                                                    })}
+                                        <div key={i} className={`p-4 mb-4 rounded-md shadow-md ${quizData.selectedAnswers[i] === quizData.correctAns[i] ? "bg-green-600" : "bg-red-600"}`}>
+                                            <h2 className="text-lg font-bold mb-2">{ques}</h2>
+                                            <div className="grid grid-cols-2 gap-3">
+                                                {quizData.allAnswers[i].map((ans, j) => {
+                                                    const isCorrect = ans === quizData.correctAns[i];
+                                                    return (
+                                                        <div key={j} className={`py-2 px-4 rounded-md ${isCorrect ? "bg-green-600 text-white" : "bg-gray-200 text-gray-800"} border border-gray-300`}>
+                                                            <p>{ans}</p>
+                                                        </div>
+                                                    )
+                                                })}
                                             </div>
                                         </div>
                                     )
                                 })}
+
+
 
                                 <div className="flex justify-center pt-5">
                                     <button className="text-white bg-red-500 text-sm p-2 rounded-full transition hover:bg-red-700 w-64 h-11 text-xl font-semibold "
@@ -71,4 +78,59 @@ const ProfileQuizView = () => {
     )
 
 }
+
+
+/* using serverside props to ensure that:
+ - The current user is logged in
+ - The current user is only able to view quizzes they completed.
+ - The quiz exists
+ */
+export const getServerSideProps = async (ctx:GetServerSidePropsContext) => {
+
+
+    const quizID = ctx.query.gameID
+
+    if(!quizID){ // if quizID is null or undefined, return user.
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            },
+        }
+    }
+
+        const quiz = await prisma.quiz.findUnique({
+            where: {
+                id: Number.parseInt(quizID?.toString()),
+            },
+        })
+
+    const session = await getServerAuthSession(ctx); // get user session
+
+    if(!quiz || !session) { // if no quiz exists, return user.
+        return {
+            redirect: {
+                destination: '/',
+                permanent: false,
+            },
+        }
+    }
+
+
+    if(session && quiz ){
+        if (session.user.id !== quiz.userId) { // if quiz exists but was not completed by the current logged-in user.
+            return {
+                redirect: {
+                    destination: '/',
+                    permanent: false,
+                },
+            }
+        }
+    }
+
+    return {
+        props: { session },
+    };
+}
+
 export default ProfileQuizView;
